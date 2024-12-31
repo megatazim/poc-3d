@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import { settings } from "@/setting";
 
-// 定义组件
+// 初始化viewer并将viewer绑定到windows对象上
 const initViewer = () => {
   if (window.viewer) {
     window.viewer.destroy();
@@ -11,7 +11,7 @@ const initViewer = () => {
   const viewer = new SuperMap3D.Viewer("SuperMap3DContainer", {
     // navigation: false,
     contextOptions: {
-      contextType: Number(settings.SuperMap3DOptions.EngineType), // Webgl2:2 ; WebGPU:3
+      contextType: Number(settings.SuperMap3DOptions.EngineType), 
     },
   });
   window.viewer = viewer;
