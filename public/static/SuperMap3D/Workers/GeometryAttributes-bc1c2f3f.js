@@ -1,0 +1,1 @@
+define(["exports","./defaultValue-6195d6e4"],(function(t,n){"use strict";t.a=function(t){t=n.u(t,n.u.EMPTY_OBJECT),this.position=t.position,this.normal=t.normal,this.st=t.st,this.bitangent=t.bitangent,this.tangent=t.tangent,this.color=t.color}}));
