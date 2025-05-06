@@ -1,8 +1,22 @@
 <script setup>
-import SuperMap3D from "@/components/SuperMap3D.vue";
+import DPGN from "@/components/DPGN.vue"; // ✅ Correct path if DPGN.vue is inside /pages
+import ViewshedAnalysis from "@/components/ViewshedAnalysis.vue";
+import Piechart from "@/components/Piechart.vue";
 </script>
 
 <template>
-  <!-- 此处插入SuperMap3D组件，并在插入后初始化地球 -->
-  <SuperMap3D></SuperMap3D>
+  <DPGN />
+  <ViewshedAnalysis />
+  <Piechart/>
 </template>
+
+<style scoped>
+html, body, #app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed
+}
+</style>

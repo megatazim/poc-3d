@@ -56,7 +56,7 @@ export namespace Viewer {
     vrButton?: boolean;
     geocoder?: boolean | GeocoderService[];
     homeButton?: boolean;
-    infoBox?: boolean;
+    // infoBox?: boolean;
     sceneModePicker?: boolean;
     selectionIndicator?: boolean;
     timeline?: boolean;
@@ -149,7 +149,7 @@ export class Viewer {
   /**
    * Gets the info box.
    */
-  readonly infoBox: InfoBox;
+  //readonly infoBox: InfoBox;
   /**
    * Gets the Geocoder.
    */
