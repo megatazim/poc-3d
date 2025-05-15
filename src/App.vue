@@ -1,11 +1,11 @@
 <script setup>
-import DPGN from "@/components/DPGN.vue"; // ✅ Correct path if DPGN.vue is inside /pages
+import SuperMap3D from "@/components/SuperMap3D.vue";
 import ViewshedAnalysis from "@/components/ViewshedAnalysis.vue";
 import Piechart from "@/components/Piechart.vue";
 </script>
 
 <template>
-  <DPGN />
+  <SuperMap3D />
   <ViewshedAnalysis />
   <Piechart/>
 </template>

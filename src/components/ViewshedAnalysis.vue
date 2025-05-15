@@ -27,7 +27,7 @@
         id="toggleToolbarFloating"
         @click="showToolbar = true"
         >
-        Viewshed3D
+        Viewshed 3D
         </button>
   
       <!-- Settings Panel -->
@@ -86,7 +86,7 @@
   let viewPosition = null;
   
   const direction = ref(0);
-  const showToolbar = ref(true);
+  const showToolbar = ref(false);
   const pitch = ref(0);
   const distance = ref(100);
   const horizontalFov = ref(90);
@@ -107,15 +107,18 @@
     viewer.resolutionScale = window.devicePixelRatio;
     scene = viewer.scene;
   
-    viewer.imageryLayers.addImageryProvider(new SuperMap3D.BingMapsImageryProvider({
-      url: 'https://dev.virtualearth.net',
-      mapStyle: SuperMap3D.BingMapsStyle.AERIAL,
-      key: 'Your_Bing_Maps_Key', // Replace with your key
-    }));
+    // viewer.imageryLayers.addImageryProvider(new SuperMap3D.BingMapsImageryProvider({
+    //   url: 'https://dev.virtualearth.net',
+    //   mapStyle: SuperMap3D.BingMapsStyle.AERIAL,
+    //   key: 'Your_Bing_Maps_Key', // Replace with your key
+    // }));
   
     viewshed3D = new SuperMap3D.ViewShed3D(scene);
+    // console.log('ss',viewshed3D );
     pointHandler = new SuperMap3D.DrawHandler(viewer, SuperMap3D.DrawMode.Point);
+    // console.log('ss23',pointHandler);
     handlerPolygon = new SuperMap3D.DrawHandler(viewer, SuperMap3D.DrawMode.Polygon, 0);
+    // console.log('ss33',handlerPolygon);
   
     pointHandler.drawEvt.addEventListener((result) => {
       const position = result.object.position;
@@ -173,6 +176,7 @@
   
   function startViewshed() {
     if (pointHandler.active) return;
+        console.log('sss',pointHandler.active);
     viewshed3D.distance = 0.1;
     scene.viewFlag = true;
     pointHandler.activate();
@@ -249,8 +253,8 @@
     height: 100%;
   }
   #toolbar {
-    position: absolute;
-  top: 800px;
+  position: absolute;
+  top: 90px;
   left: 10px;
   background-color: rgba(38, 38, 38, 0.85);
   padding: 12px 16px;
@@ -303,7 +307,7 @@
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
-  width: 150px;
+  width: 200px;
   cursor: pointer;
 }
 

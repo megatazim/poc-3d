@@ -59,35 +59,27 @@ function initViewer(provider) {
     terrainProvider: SuperMap3D.createWorldTerrain()
   });
 
-const isLayerListVisible = ref(true);
-function toggleLayerList() {
-  isLayerListVisible.value = !isLayerListVisible.value;
-}
+// const isLayerListVisible = ref(true);
+// function toggleLayerList() {
+//   isLayerListVisible.value = !isLayerListVisible.value;
+// }
 
 const scene = viewer.scene;
-const promise1 = scene.open("http://localhost:8090/iserver/services/3D-KLCC-2/rest/realspace")
-const promise2 = scene.open("http://localhost:8090/iserver/services/3D-Gunatanah-2/rest/realspace");
 
-SuperMap3D.when(promise1, function (layers1) {
+const promise = scene.open("http://localhost:8090/iserver/services/3D-ALL/rest/realspace");
+
+SuperMap3D.when(promise, function (layers) {
   console.log("KLCC loaded");
-  layerCollection.value = layers1;
+  layerCollection.value = layers;
 
-  SuperMap3D.when(promise2, function (layers2) {
-    console.log("Gunatanah loaded");
-    layerCollection.value.push(...layers2); // Merge both layer sets
-    updateLayerList();
+  updateLayerList();
+  viewer.imageryLayers.addImageryProvider(provider);
+  initPopup(viewer, scene);
+  loadMultipleLayers(scene);
+  document.getElementById("toolbar").style.display = "block";
 
-    viewer.imageryLayers.addImageryProvider(provider);
-    initPopup(viewer, scene);
-    loadMultipleLayers(scene);
-    document.getElementById("toolbar").style.display = "block";
-
-  }, function (error2) {
-    console.error("Failed to load Gunatanah scene:", error2);
-  });
-
-}, function (error1) {
-  console.error("Failed to load KLCC scene:", error1);
+}, function (error) {
+  console.error("Failed to load KLCC scene:", error);
 });
 
 
@@ -164,7 +156,7 @@ function updateLayerList() {
   });
 }
 
-const isLayerListVisible = ref(true);
+ const isLayerListVisible = ref(false);
 
 function toggleLayerList() {
   isLayerListVisible.value = !isLayerListVisible.value;
@@ -283,10 +275,10 @@ onMounted(() => {
   initViewer(provider);
 
   // Once viewer is initialized
-  viewer.scene.open("http://localhost:8090/iserver/services/3D-GTC/rest/realspace").then(() => {
-    loadMultipleLayers(viewer.scene);
-    $("#toolbar").show();
-  });
+  // viewer.scene.open("http://localhost:8090/iserver/services/3D-GTC/rest/realspace").then(() => {
+  //   loadMultipleLayers(viewer.scene);
+  //   $("#toolbar").show();
+  // });
 });
 
 function loadMultipleLayers(scene) {
@@ -366,31 +358,36 @@ const layerItemsRef = ref(null);
 </div>
 
 <!-- ECharts graph container -->
-<div id="GTC" style="display: none; position: absolute; top: 60px; left: 10px; background: rgba(38,38,38,0.5); z-index: 1000;">
+<!-- <div id="GTC" style="display: none; position: absolute; top: 60px; left: 10px; background: rgba(38,38,38,0.5); z-index: 1000;">
   <div style="padding: 10px">
     <div class="ui piled segment">
       <div id="graph" style="width: 300px; height: 250px;"></div>
     </div>
   </div>
-</div>
+</div> -->
 
-<div id="mainContainer">
+<!-- <div id="mainContainer"> -->
 
 <!-- Pie Chart Component -->
-<div id="pieChartContainer" v-if="showChart">
+<!-- <div id="pieChartContainer" v-if="showChart">
       <Piechart :chartData="chartData" />
     </div>
-  </div>
+  </div> -->
   
 
-  <div id="bubble" class="bubble" style="bottom:0;left:82%;display:none;">
-  <div id="tools" style="text-align:right">
-    <span style="color: rgb(95, 74, 121);padding: 5px;position: absolute;left: 10px;top: 4px;">Object Info</span>
-    <span class="fui-export" id="bubblePosition" style="color: darkgrey; padding:5px" title="Dock"></span>
-    <span class="fui-cross" title="Close" id="close" style="color: darkgrey;padding:5px"></span>
+  <div id="bubble" class="bubble" style="bottom: 0; left: 82%; display: none;">
+  <div class="bubble-header" id="tools">
+    <span class="bubble-title">Object Info</span>
+    <div class="bubble-actions">
+      <span id="bubblePosition" class="fui-export bubble-icon" title="Dock"></span>
+      <span id="close" class="fui-cross bubble-icon" title="Close"></span>
+    </div>
   </div>
-  <div style="overflow-y:scroll;height:150px" id="tableContainer">
-    <table id="tab"><tbody></tbody></table>
+
+  <div id="tableContainer" class="bubble-content">
+    <table id="tab">
+      <tbody></tbody>
+    </table>
   </div>
 </div>
 
@@ -489,7 +486,7 @@ html, body {
   padding: 6px 10px;
   border-radius: 4px;
   cursor: pointer;
-  width: 150px;
+  width: 200px;
   z-index: 900;
 
   /* white-space: nowrap; ✅ Prevent text wrapping */
@@ -511,69 +508,62 @@ html, body {
  }
 
 #bubble {
-  position: fixed;
-  top: 80%;
-  left: 100%;
-  background: white;
-  padding: 100px;
-  border-radius: 8px;
-  display: none;
-  color: rgb(0, 0, 0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  z-index: 1001; 
-}
-
-.float {
-  position: fixed;
-  left: 92%;
-  bottom: 45%;
-}
-
-#tableContainer {
-  max-height: 700px;
-  overflow-y: auto;
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.95);
   border: 1px solid #ccc;
-  background: white;
-  padding: 8px;
+  border-radius: 6px;
+  width: 260px;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  font-family: sans-serif;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  font-size: 14px;
-}
-
-
-.float {
-  position: left;
-  left: 82%;
-  bottom: 55%;
-}
-
-#tableContainer {
-  max-height: 100px;
+.bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
   position: relative;
-  /* overflow-y: auto; */
-  border: 2px solid #ccc;
-  background: white;
-  padding: 8px;
 }
 
-table {
+.bubble-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: rgb(95, 74, 121);
+  position: absolute;
+  left: 10px;
+  top: 8px;
+}
+
+.bubble-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.bubble-icon {
+  cursor: pointer;
+  color: darkgrey;
+  font-size: 14px;
+  padding: 5px;
+}
+
+.bubble-content {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+#tab {
   width: 100%;
   border-collapse: collapse;
 }
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  font-size: 14px;
+
+#tab td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #eee;
+  font-size: 13px;
 }
 
 #layerList button {
